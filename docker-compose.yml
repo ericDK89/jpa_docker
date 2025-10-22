@@ -1,0 +1,18 @@
+services:
+
+  jpa_docker_db:
+    container_name: jpa_docker
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: jpa_docker
+
+    volumes:
+      - postgres_data:/jpa_docker
+
+volumes:
+  postgres_data:
