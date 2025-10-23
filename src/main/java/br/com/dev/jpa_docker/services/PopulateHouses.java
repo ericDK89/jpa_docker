@@ -1,7 +1,6 @@
 package br.com.dev.jpa_docker.services;
 
 import br.com.dev.jpa_docker.models.House;
-import br.com.dev.jpa_docker.repositories.HouseRepository;
 import br.com.dev.jpa_docker.utils.API;
 import java.net.http.HttpResponse;
 import java.util.List;
@@ -14,12 +13,9 @@ import tools.jackson.databind.ObjectMapper;
 public class PopulateHouses {
 
   @Autowired
-  HouseRepository houseRepository;
-
-  @Autowired
   API api;
 
-  public void execute() {
+  public List<House> execute() {
     final String uri = "https://potterapi-fedeperin.vercel.app/en/houses";
     HttpResponse<String> response = api.execute(uri);
 
@@ -27,6 +23,6 @@ public class PopulateHouses {
     };
     ObjectMapper objectMapper = new ObjectMapper();
 
-    houseRepository.saveAll(objectMapper.readValue(response.body(), typeReference));
+    return objectMapper.readValue(response.body(), typeReference);
   }
 }
