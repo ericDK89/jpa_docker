@@ -2,6 +2,7 @@ package br.com.dev.jpa_docker.controllers;
 
 import br.com.dev.jpa_docker.dtos.StudentDTO;
 import br.com.dev.jpa_docker.services.AddStudent;
+import br.com.dev.jpa_docker.services.DeleteStudent;
 import br.com.dev.jpa_docker.services.GetStudents;
 import br.com.dev.jpa_docker.services.UpdateStudent;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,9 @@ public class StudentsControllers {
 
   @Autowired
   UpdateStudent updateStudent;
+
+  @Autowired
+  DeleteStudent deleteStudent;
 
   @GetMapping
   public ResponseEntity<Object> getStudents(
@@ -56,6 +61,17 @@ public class StudentsControllers {
   public ResponseEntity<Object> updateStudent(@RequestBody StudentDTO studentDTO,
       @PathVariable UUID id) {
     try {
+      updateStudent.execute(id, studentDTO);
+      return ResponseEntity.noContent().build();
+    } catch (RuntimeException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<Object> deleteStudent(@PathVariable UUID id) {
+    try {
+      deleteStudent.execute(id);
       return ResponseEntity.noContent().build();
     } catch (RuntimeException e) {
       return ResponseEntity.badRequest().body(e.getMessage());

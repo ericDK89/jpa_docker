@@ -28,7 +28,7 @@ public class Student {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "house_id")
   private House house;
 

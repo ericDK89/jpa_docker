@@ -34,6 +34,6 @@ public class House {
   private List<String> colors;
   @JsonAlias("animal")
   private String animal;
-  @OneToMany(mappedBy = "house")
+  @OneToMany(mappedBy = "house", orphanRemoval = true)
   private List<Student> students;
 }
