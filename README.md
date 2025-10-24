@@ -11,6 +11,7 @@ to showcase database operations and relationships.
 <li>Custom exception handling</li>
 <li>DB relationships and JPA mappings</li>
 <li>Containerized with Docker</li>
+<li>Tests with JUnit and Mockito</li>
 <li>Api routes documentation with Swagger UI</li>
 </ul>
 
@@ -20,6 +21,8 @@ to showcase database operations and relationships.
 <p>Spring Data JPA - Database abstraction layer</p>
 <p>Docker - Containerization</p>
 <p>PostgreSQL - Database</p>
+<p>JUnit - Testing framework</p>
+<p>Mocktio - Mocking framework for unit tests</p>
 <p>SrpingDoc Open API - Generation of API documentation<p>
 <p>Lombok - Code generation library</p>
 <p>Jackson - JSON processing library</p>
