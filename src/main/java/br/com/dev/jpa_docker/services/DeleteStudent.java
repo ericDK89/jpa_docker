@@ -12,6 +12,10 @@ public class DeleteStudent {
   StudentRepository studentRepository;
 
   public void execute(UUID id) {
-    studentRepository.deleteById(id);
+    try {
+      studentRepository.deleteById(id);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException();
+    }
   }
 }

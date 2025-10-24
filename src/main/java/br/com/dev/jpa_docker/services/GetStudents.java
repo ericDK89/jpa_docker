@@ -25,6 +25,7 @@ public class GetStudents {
   private List<StudentDTO> formatList(List<Student> students) {
     return students.stream()
         .map(s -> new StudentDTO(
+            s.getId(),
             s.getFullName(),
             s.getHouse().getHouse(),
             s.getBirthday().toString()

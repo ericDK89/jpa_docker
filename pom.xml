@@ -61,6 +61,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <groupId>org.springdoc</groupId>
+      <version>2.8.13</version>
+    </dependency>
+    <dependency>
       <artifactId>jackson-databind</artifactId>
       <groupId>tools.jackson.core</groupId>
       <version>3.0.1</version>

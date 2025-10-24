@@ -5,7 +5,17 @@ import br.com.dev.jpa_docker.services.AddStudent;
 import br.com.dev.jpa_docker.services.DeleteStudent;
 import br.com.dev.jpa_docker.services.GetStudents;
 import br.com.dev.jpa_docker.services.UpdateStudent;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +30,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@OpenAPIDefinition(
+    info = @Info(title = "JPA_DOCKER Project", version = "1.0.0")
+)
+@Tag(name = "students_controllers",
+    description = "Students controller for get, add, update and delete.")
 @RestController
 @RequestMapping("/students")
 public class StudentsControllers {
@@ -36,45 +51,103 @@ public class StudentsControllers {
   @Autowired
   DeleteStudent deleteStudent;
 
+  @Operation(
+      summary = "Get students",
+      description = "Retrieves a list of students. Can be filtered by name when provided."
+  )
+  @Parameter(
+      name = "name",
+      description = "Filter students by name",
+      in = ParameterIn.QUERY,
+      schema = @Schema(type = "string", example = "Harry"),
+      required = false
+  )
   @GetMapping
-  public ResponseEntity<Object> getStudents(
+  public ResponseEntity<List<StudentDTO>> getStudents(
       @RequestParam(value = "name", required = false) String name) {
-    try {
-      var response = getStudents.execute(name);
-      return ResponseEntity.ok().body(response);
-    } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    var response = getStudents.execute(name);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
+  @Operation(
+      summary = "Add student",
+      description = "Add a student."
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      description = "Student object to be created",
+      required = true,
+      content = @Content(
+          schema = @Schema(implementation = StudentDTO.class),
+          examples = @ExampleObject(
+              name = "Student Example",
+              summary = "Example of student creation",
+              value = """
+                  {
+                  "fullName": "John Snow",
+                  "house": "Ravenclaw",
+                  "birthdate": "Feb 24, 1999"
+                  }
+                  """
+          )
+      )
+  )
   @PostMapping("/add")
-  public ResponseEntity<Object> addStudent(@Valid @RequestBody StudentDTO studentDTO) {
-    try {
-      addStudent.execute(studentDTO);
-      return ResponseEntity.status(HttpStatus.CREATED).body("Student added");
-    } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
+  public ResponseEntity<Void> addStudent(
+      @Valid @RequestBody StudentDTO studentDTO) {
+    addStudent.execute(studentDTO);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  @Operation(
+      summary = "Update student",
+      description = "Update a student."
+  )
+  @Parameter(
+      name = "id",
+      required = true,
+      description = "UUID of the student to be updated",
+      example = "550e8400-e29b-41d4-a716-446655440000",
+      schema = @Schema(type = "string", format = "UUID")
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      description = "Student object to be updated",
+      required = true,
+      content = @Content(
+          schema = @Schema(implementation = StudentDTO.class),
+          examples = @ExampleObject(
+              name = "Student Example",
+              summary = "Example of update a student",
+              value = """
+                  {
+                  "fullName": "John Targaryen",
+                  "house": "Slytherin",
+                  "birthdate": "Jul 01, 2000"
+                  }
+                  """
+          )
+      )
+  )
   @PutMapping("/update/{id}")
-  public ResponseEntity<Object> updateStudent(@RequestBody StudentDTO studentDTO,
+  public ResponseEntity<Void> updateStudent(@RequestBody StudentDTO studentDTO,
       @PathVariable UUID id) {
-    try {
-      updateStudent.execute(id, studentDTO);
-      return ResponseEntity.noContent().build();
-    } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    updateStudent.execute(id, studentDTO);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  @Operation(
+      summary = "Delete student",
+      description = "Permanently deletes a student by their unique identifier"
+  )
+  @Parameter(
+      name = "id",
+      required = true,
+      description = "UUID of the student to delete",
+      example = "550e8400-e29b-41d4-a716-446655440000",
+      schema = @Schema(type = "string", format = "UUID")
+  )
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<Object> deleteStudent(@PathVariable UUID id) {
-    try {
-      deleteStudent.execute(id);
-      return ResponseEntity.noContent().build();
-    } catch (RuntimeException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    deleteStudent.execute(id);
+    return ResponseEntity.noContent().build();
   }
 }

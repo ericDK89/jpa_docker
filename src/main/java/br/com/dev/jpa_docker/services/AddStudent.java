@@ -23,6 +23,11 @@ public class AddStudent {
     House house = houseRepository.findByHouse(studentDTO.house())
         .orElseThrow(() -> new NotFound(studentDTO.house()));
     student.setHouse(house);
-    studentRepository.save(student);
+
+    try {
+      studentRepository.save(student);
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException();
+    }
   }
 }
