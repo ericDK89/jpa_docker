@@ -49,8 +49,6 @@ public class AddStudentTest {
         .founder("Salazar Slytherin")
         .build();
 
-    houseRepository.save(house);
-
     when(houseRepository.findByHouse("Slytherin")).thenReturn(Optional.of(house));
 
     addStudent.execute(studentDTO);

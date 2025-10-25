@@ -40,10 +40,6 @@ public class UpdateStudent {
       student.setBirthday(LocalDate.parse(studentDTO.birthdate(), formatter));
     }
 
-    try {
-      studentRepository.save(student);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException();
-    }
+    studentRepository.save(student);
   }
 }
