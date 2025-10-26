@@ -23,7 +23,7 @@ to showcase database operations and relationships.
 <p>PostgreSQL - Database</p>
 <p>JUnit - Testing framework</p>
 <p>Mocktio - Mocking framework for unit tests</p>
-<p>SrpingDoc Open API - Generation of API documentation<p>
+<p>SpringDoc Open API - Generation of API documentation<p>
 <p>Lombok - Code generation library</p>
 <p>Jackson - JSON processing library</p>
 
